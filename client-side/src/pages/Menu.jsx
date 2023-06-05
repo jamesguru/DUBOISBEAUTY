@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { logOut } from "../redux/userRedux";
-import JsPDF from 'jspdf';
+import JsPDF from "jspdf";
 import "../styles/menu.css";
+import Table from "react-bootstrap/Table";
 import {
   BrowserRouter as Router,
   Switch,
@@ -61,14 +62,13 @@ const Button = styled.button`
   color: #dcca87;
   background-color: #0c0c0c;
   cursor: pointer;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;
-const Header =styled.h5`
-font-family:"Roboto";
-`
-
+const Header = styled.h5`
+  font-family: "Roboto";
+`;
 
 const Menu = () => {
   const [open, setOpen] = React.useState(false);
@@ -90,7 +90,9 @@ const Menu = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await publicRequest.get(`/products?category=${user.seller}`);
+        const res = await publicRequest.get(
+          `/products?category=${user.seller}`
+        );
 
         setproducts(res.data);
       } catch (error) {}
@@ -100,13 +102,11 @@ const Menu = () => {
   }, []);
 
   const generatePDF = () => {
-
-    const report = new JsPDF('landscape','pt','a3');
-    report.html(document.querySelector('.product')).then(() => {
-        report.save('products.pdf');
+    const report = new JsPDF("landscape", "pt", "a3");
+    report.html(document.querySelector(".product")).then(() => {
+      report.save("products.pdf");
     });
-
-  }
+  };
 
   return (
     <Container>
@@ -116,27 +116,85 @@ const Menu = () => {
         className="mb-3"
       >
         <Tab eventKey="profile" title="Home">
-          <Button onClick={generatePDF}>Download PDF <FontDownload></FontDownload></Button>
+          <Button onClick={generatePDF}>
+            Download PDF <FontDownload></FontDownload>
+          </Button>
           <div className="product">
             <Header>Credence Products</Header>
-          <Wrapper>
-            {products.map((item, index) => (
-              <Product item={item} key={index} />
-            ))}
-          </Wrapper>
+            <Wrapper>
+              {products.map((item, index) => (
+                <Product item={item} key={index} />
+              ))}
+            </Wrapper>
           </div>
         </Tab>
         <Tab eventKey="home" title="Add Product">
           <DashBoard />
         </Tab>
         <Tab eventKey="manage" title="Manage">
-          manage
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td colSpan={2}>Larry the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </Table>
         </Tab>
         <Tab eventKey="orders" title="Orders">
-          Orders
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td colSpan={2}>Larry the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </Table>
         </Tab>
         <Tab eventKey="contact" title="My Account">
-         <Button onClick={handleLogout}>Logout</Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </Tab>
       </Tabs>
     </Container>
